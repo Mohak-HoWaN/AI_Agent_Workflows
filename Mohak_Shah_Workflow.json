@@ -1,0 +1,174 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f438cc87-d7fc-4b98-a653-8bb6110dc181",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1O3UgN8tDfvpkxaC-RmAPFaw9oe70ss5qu5kZu_g9G-M/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1O3UgN8tDfvpkxaC-RmAPFaw9oe70ss5qu5kZu_g9G-M/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        220,
+        0
+      ],
+      "id": "e9b9cc23-fd43-4f05-8445-bddafcd6c0a6",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": false,
+      "retryOnFail": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "v2yBiEkeHlAahCYX",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        420,
+        0
+      ],
+      "id": "a0eaf4cd-0c33-4723-bf68-2e4d973bd601",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        620,
+        20
+      ],
+      "id": "a3e88999-2b9b-47c9-bbcb-d7bb044bf520"
+    },
+    {
+      "parameters": {
+        "fromEmail": "shahonthefloor@gmail.com",
+        "toEmail": "={{ $json[\"Email\"] }}",
+        "subject": "=Welcome to {{ $json[\"Company\"] }}, {{ $json[\"Name\"] }}!",
+        "emailFormat": "text",
+        "text": "=Hi {{ $json[\"Name\"] }},\n\nWe're excited to have you on board at {{ $json[\"Company\"] }}.\n\n{{ $json[\"CustomMessage\"] }}\n\nBest regards,  \nGigFloww",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        500,
+        -220
+      ],
+      "id": "50882b59-1160-4bfd-8e99-60e7567a6321",
+      "name": "Send email",
+      "webhookId": "bac947ae-31f0-4c27-9b1b-b06db216c6d5",
+      "credentials": {
+        "smtp": {
+          "id": "KmxXyATwMn9gnIYl",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "961be073-7c64-4561-aefd-12ff323c317c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "56f4808045fe7f717d20a1b870537a70997ff21d293f48941b69bcaa05ac9489"
+  },
+  "id": "5FXHBjQ7wAj3pw8R",
+  "tags": []
+}
